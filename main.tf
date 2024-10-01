@@ -1,17 +1,25 @@
 resource "aws_vpc" "main" {
-  cidr_block         = var.cidr_block
+  cidr_block         = var.cidr_block # cidr block will be sent to env main.tf
   enable_dns_support = true
   tags = merge({
     Name = "${var.env}-vpc"
   },
-    var.tags)
+    var.tags)  # this tag we are giving info in main.tfvars
 }
 
-resource "aws_subnet" "main" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.1.0/24"
+# Local module for subnets
 
-  tags = {
-    Name = "Main"
-  }
+module "subnets" {
+  source = "./subnets"
+
+  for_each    = var.subnets
+  cidr_block  = each.value["cidr_block"]
+  subnet_name = each.key
+
+  vpc_id = aws_vpc.main.id
+
+  env  = var.env
+  tags = var.tags
+  az   = var.az
 }
+
