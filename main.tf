@@ -23,3 +23,14 @@ module "subnets" {
   az   = var.az
 }
 
+
+# 1st task is to create a AWS VPC peer connection
+
+
+
+resource "aws_vpc_peering_connection" "peer" {
+  peer_vpc_id   = aws_vpc.main.id
+  vpc_id        = var.default_vpc_id
+  auto_accept   = true  # If we dont give auto accept as true peering connection will be in pending state
+
+}
