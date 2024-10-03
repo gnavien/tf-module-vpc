@@ -38,4 +38,19 @@
 resource "aws_vpc" "main" {
   cidr_block         = var.cidr_block # cidr block will be sent to env main.tf
   enable_dns_support = true
+  tags = merge({
+    Name = "${var.env}-vpc"
+  },
+    var.tags)  # this tag we are giving info in main.tfvars
 }
+
+resource "aws_subnet" "main"{
+  count = length(var.web_subnet_cidr_block)
+  vpc_id = aws_vpc.main.id
+  cidr_block = element(var.web_subnet_cidr_block, count.index)
+
+  tags = merge({
+    Name = "${var.env}-web-subnet"
+  },
+    var.tags)
+  }
