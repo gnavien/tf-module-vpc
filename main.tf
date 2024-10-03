@@ -1,14 +1,11 @@
 resource "aws_vpc" "main" {
-  cidr_block         = var.cidr_block # cidr block will be sent to env main.tf
+  cidr_block         = var.cidr_block
   enable_dns_support = true
   tags = merge({
     Name = "${var.env}-vpc"
   },
-    var.tags)  # this tag we are giving info in main.tfvars
+    var.tags)
 }
-
-
-# Local module for subnets
 
 module "subnets" {
   source = "./subnets"
@@ -22,7 +19,6 @@ module "subnets" {
   env  = var.env
   tags = var.tags
   az   = var.az
-
 }
 
 
