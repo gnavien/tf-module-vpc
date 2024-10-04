@@ -84,5 +84,8 @@ resource "aws_route" "peer-route" {
   vpc_peering_connection_id = aws_vpc_peering_connection.peer.id # This way you can add peering connection to all the route tables
 }
 
+# We need to add an entry to default vpc for route tables. We have to copy the default route table from the
+# default vpc default route table ID. This input will be given in main.tfvars
+
 
 
