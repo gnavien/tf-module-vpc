@@ -46,7 +46,23 @@ resource "aws_route" "igw" {
   gateway_id = aws_internet_gateway.igw.id # In the above we have created IGW, while adding IGW use the aws route for the public
 }
 
+# We are creating a NAT gateway for the public, the mandatory needed is eip (elastic IP), we can check in terraform how to create aws_eip
 
+resource "aws_eip" "ngw" {
+  domain   = "vpc"
+}
+
+
+resource "aws_nat_gateway" "ngw" {
+  allocation_id = aws_eip.ngw.id
+  subnet_id     = lookup(lookup(module.subnets, "public", null), "subnet_ids", null)[0]
+
+  tags = merge({
+    Name = "${var.env}-ngw"
+  },
+    var.tags)
+
+}
 
 
 
