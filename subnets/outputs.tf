@@ -7,5 +7,5 @@ output "subnet_ids" {
 # We will be sending the output to the main module
 
 output "route_table_ids" {
-  value = aws_route_table.table.id
+  value = aws_route_table.route_table.id
 }
