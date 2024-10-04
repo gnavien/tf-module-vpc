@@ -19,3 +19,10 @@ resource "aws_route_table" "route_table" {
     var.tags)
 }
 
+# We need to add a route table association for each subnet
+
+resource "aws_route_table_association" "association" {
+  count      = length(aws_subnet.main)
+  subnet_id   = aws_subnet.main[count.index].id
+  route_table_id = aws_route_table.route_table.id
+}
