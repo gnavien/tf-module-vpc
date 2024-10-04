@@ -64,6 +64,13 @@ resource "aws_nat_gateway" "ngw" {
 
 }
 
+# We need to create a new route to the NAT gateway for the other services like web, app and DB
 
-
+resource "aws_route" "route_ngw" {
+  count      = length(local.private_route_table_ids)
+  #wanted to pick one route table at a time so the below code
+  route_table_id = element(local.private_route_table_ids, count.index)
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id = aws_nat_gateway.ngw.id
+}
 
