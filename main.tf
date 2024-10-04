@@ -74,3 +74,13 @@ resource "aws_route" "route_ngw" {
   nat_gateway_id = aws_nat_gateway.ngw.id
 }
 
+# We need to add one more route table to add all the subnets
+
+resource "aws_route" "peer-route" {
+  count      = length(local.all_route_table_ids)
+  #wanted to pick one route table at a time so the below code
+  route_table_id = element(local.all_route_table_ids, count.index)
+  destination_cidr_block = "172.31.0.0/16"
+  vpc_peering_connection_id = aws_vpc_peering_connection.peer.id # This way you can add peering connection to all the route tables
+}
+
