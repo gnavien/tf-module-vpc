@@ -52,6 +52,10 @@ resource "aws_route" "igw" {
 
 resource "aws_eip" "ngw" {
   domain = "vpc"
+  tags = merge({
+    Name = "${var.env}-eip"
+  },
+    var.tags)
 }
 
 
